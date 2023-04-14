@@ -40,7 +40,7 @@
                                     <td> {{$client->acc_number}}</td>
                                     <td> <b><i> {{number_format($client->acc_balance, 2, ',', ' ')}} </i> </b></td>
                                     {{-- <td> <a href="{{route('clients-show', $client)}}" class="btn btn-info">Show</a></td> --}}
-                                    {{-- <td> <a href="{{route('clients-edit', $client)}}" class="btn btn-success">Edit</a></td> --}}
+                                    <td> <a href="{{route('clients-edit', $client)}}" class="btn btn-success">Edit</a></td>
                                     <td><a href="{{route('clients-addfunds', $client)}}" class="btn btn-outline-dark brown" style="font-size: 12px">Add Funds</a></td>
                                     <td><a href="{{route('clients-withdrawfunds', $client)}}" class="btn btn-outline-dark brown" style="font-size: 12px">Withdraw Funds</a></td>
                                     <td>

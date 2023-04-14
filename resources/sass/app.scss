@@ -6,3 +6,55 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+
+.client-line {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    .client-info {
+        display: flex;
+        justify-content: space-around;
+        span {
+            color: crimson;
+            font-weight: bold;
+            letter-spacing: 5px;
+            padding-left: 20px;
+        }
+    }
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+}
+
+.grey {
+    background-color: #7B7B7B;
+    
+}
+
+.brown {
+    background-color: #597d35;
+}
+
+.btn:hover {
+    box-shadow: 0px 7px 12px 0px rgb(0, 0, 0, 60%);  
+    text-decoration: none;
+}
+
+.shadow {
+    box-shadow: 0px 0px 10px rgba(90, 81, 33, 0.5) !important;
+  }
+
+.black {
+    color: #000000;
+    font-size: 10px;
+    font-style: italic;
+}
+
+body{
+    // background-image: url("../../img/imgback.jpeg");
+    
+}
