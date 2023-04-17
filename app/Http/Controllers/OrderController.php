@@ -11,7 +11,10 @@ class OrderController extends Controller
    
     public function index()
     {
-        //
+        $orders = Order::all();
+        return view('orders.index', [
+            'orders' => $orders
+        ]);
     }
 
    
@@ -34,6 +37,8 @@ class OrderController extends Controller
             'client_id' => $request->client_id,
 
         ]);
+
+        return redirect()->back();
     }
 
     

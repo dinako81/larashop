@@ -1,46 +1,55 @@
 @extends('layouts.app')
 
 @section('content')
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Id Nr.</th>
-            <th scope="col">Name</th>
-            <th scope="col">Surname</th>
-            <th scope="col">Personal ID</th>
-            <th scope="col">Sąskaitos Nr.</th>
-            <th scope="col">Balance</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>1</td>
-            <td>{{$client->name}} </td>
-            <td>{{$client->surname}} </td>
-            <td>{{$client->pid}} </td>
-            <td>{{$client->iban}} </td>
-            <td>{{$client->balance}} </td>
-        </tr>
-    </tbody>
-</table>
-<form class="add" action="{{ route('clients-add-money', $client) }}" method="POST">
-    @csrf
-    @method('PUT')
-    <div class="mb-3 add-money">
-        <label class="form-label">Add Money</label>
-        <input type="text" class="form-control" name="amount" step="0.01" value="{{ old('amount') }}" required>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h1>Client</h1>
+                </div>
+                <div class="card-body">
+                    <div class="client-line">
+                        <div class="client-info">
+                            {{$client->name}}
+                            {{$client->surname}}
+                        </div>
+                        <div class="buttons">
+                            <a href="{{route('orders-create', ['id' => $client])}}" class="btn btn-info">new order</a>
+                            <a href="{{route('clients-edit', $client)}}" class="btn btn-success">Edit</a>
+                            <form action="{{route('clients-delete', $client)}}" method="post">
+                                <button type="submit" class="btn btn-danger">delete</button>
+                                @csrf
+                                @method('delete')
+                            </form>
+                        </div>
+                    </div>
+                    <h2>Orders</h2>
+                    <ul class="list-group">
+                        @forelse($client->order as $order)
+                        <li class="list-group-item">
+                            <div class="order-line">
+                                <div class="order-info">
+                                    {{$order->title}}
+                                    {{$order->price}}
+                                </div>
+                                <div class="buttons">
+                                    <form action="{{route('orders-delete', $order)}}" method="post">
+                                        <button type="submit" class="btn btn-danger">delete</button>
+                                        @csrf
+                                        @method('delete')
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                        @empty
+                        <li class="list-group-item">
+                            <div class="client-line">No orders</div>
+                        </li>
+                        @endforelse
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-success add-btn">Add</button>
-</form>
-
-
-<form class="draw" action="{{ route('clients-withdraw-money', $client) }}" method="POST">
-    @csrf
-    @method('PUT')
-    <div class="mb-3 withdraw-money">
-        <label class="form-label">Withdraw Money</label>
-        <input type="text" class="form-control" name="amount" step="0.01" value="{{ old('amount') }}" required>
-    </div>
-    <button type="submit" class="btn btn-danger draw-btn">Withdraw</button>
-</form>
+</div>
 @endsection

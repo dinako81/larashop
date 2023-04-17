@@ -9,7 +9,7 @@
                     <h1>Add Order</h1>
                 </div>
                 <div class="card-body grey">
-                    <form action="{{route('clients-store')}}" method="post">
+                    <form action="{{route('orders-store')}}" method="post">
                         <div class="mb-3">
                             <label class="form-label">Title</label>
                             <input type="text" class="form-control brown" name="title" value={{old('title')}}>
