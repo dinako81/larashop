@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HelloController;
 use App\Http\Controllers\ClientController as CL;
+use App\Http\Controllers\FundsController as F;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +22,7 @@ Route::get('/', function () {
 });
 
 Route::get('/hello/client', [HelloController::class, 'hello'])->name('client');
+
 Auth::routes();
 
 
@@ -46,10 +49,3 @@ Route::prefix('clients')->name('clients-')->group(function () {
     Route::put('/withdrawfunds/{client}', [F::class, 'minusfunds'])->name('minusfunds');
     
 });
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
