@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HelloController;
 use App\Http\Controllers\ClientController as CL;
 use App\Http\Controllers\FundsController as F;
+use App\Http\Controllers\OrderController as ORD;
 
 
 /*
@@ -47,5 +48,16 @@ Route::prefix('clients')->name('clients-')->group(function () {
 
     Route::get('/withdrawfunds/{client}', [F::class, 'withdrawfunds'])->name('withdrawfunds');
     Route::put('/withdrawfunds/{client}', [F::class, 'minusfunds'])->name('minusfunds');
+    
+});
+
+Route::prefix('orders')->name('orders-')->group(function () {
+    Route::get('/', [ORD::class, 'index'])->name('index');
+    Route::get('/create', [ORD::class, 'create'])->name('create');
+    Route::post('/create', [ORD::class, 'store'])->name('store');
+    Route::get('/{ordert}', [ORD::class, 'show'])->name('show');
+    Route::get('/edit/{order}', [ORD::class, 'edit'])->name('edit');
+    Route::put('/edit/{order}', [ORD::class, 'update'])->name('update');
+    Route::delete('/delete/{order}', [ORD::class, 'destroy'])->name('delete');
     
 });

@@ -13,23 +13,53 @@ class ClientController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $clients = Client::all()->sortBy('surname');
-
-        $sort = Client::all();
         
-        if ($sort == 'surname_asc') {
-            usort($clients, fn($a, $b) => $a['surname'] <=> $b['surname']);
-        }
-        elseif ($sort == 'surname_desc') {
-            usort($clients, fn($a, $b) => $b['surname'] <=> $a['surname']);
-        }
+        // $sort = $request->sort ?? '';
+        // $filter = $request->filter ?? '';
+        // $per = (int) ($request->per ?? 10);
+        // $page = $request->page ?? 1;
+
+        // // $clients = match($filter) {
+        // //     'tt' => Client::where('tt', 1),
+        // //     'fb' => Client::where('tt', 0),
+        // //     default => Client::where('tt', 0)->orWhere('tt', 1)
+        // // };
+
+        // $clients = match($sort) {
+        //     'name_asc' => $clients->orderBy('name'),
+        //     'name_desc' => $clients->orderBy('name', 'desc'),
+        //     'surname_asc' => $clients->orderBy('surname'),
+        //     'surname_desc' => $clients->orderBy('surname', 'desc'),
+           
+        // };
+
+        // $request->session()->put('last-client-view', [
+        //     // 'sort' => $sort,
+        //     // 'filter' => $filter,
+        //     // 'page' => $page,
+        //     // 'per' => $per
+        // ]);
+
+        // $clients = $clients->paginate($per)->withQueryString();
+
+
+        $clients = Client::all()->sortByDesc('name');
+        $clients = Client::orderBy('name', 'desc')->get();
+
 
         return view('clients.index', [
             'clients' => $clients,
-            'sort' => $sort
+            // 'sortSelect' => Client::SORT,
+            // 'sort' => $sort,
+            // 'filterSelect' => Client::FILTER,
+            // 'filter' => $filter,
+            // 'perSelect' => Client::PER,
+            // 'per' => $per,
+            // 'page' => $page
         ]);
+
     }
 
     public function create()
