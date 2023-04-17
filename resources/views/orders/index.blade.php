@@ -5,18 +5,16 @@
 
 <div class="container" style="font-size: 13px">
 
-
     <div class="row justify-content-center">
-
         <div class="col-12">
             <div class="card mt-1">
                 <div class="card-header grey">
                     <h1>Orders List</h1>
                 </div>
 
-                <form action="{{route('orders-index')}}" method="get">
+                {{-- <form action="{{route('orders-index')}}" method="get"> --}}
 
-                    {{--
+                {{--
                 <div class="container">
                     <div class="row">
 
@@ -26,9 +24,9 @@
                                 <select class="form-select" name="sort">
                                     @foreach($sortSelect as $value => $text)
                                     <option value="{{$value}}" @if($value===$sort) selected @endif>{{$text}}</option>
-                    @endforeach
-                    </select>
-                    <div class="form-text">Please select your sort preferences</div>
+                @endforeach
+                </select>
+                <div class="form-text">Please select your sort preferences</div>
             </div>
         </div> --}}
 
@@ -97,7 +95,8 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($client->order as $order)
+
+                @forelse($orders as $order)
                 <tr>
                     <td> </td>
                     <td>
