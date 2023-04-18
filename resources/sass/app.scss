@@ -38,6 +38,9 @@
     .order-info {
         display: flex;
         justify-content: space-around;
+        .order-data {
+            width: 300px;
+        }
        .client {
         color: skyblue;
         font-weight: bold;

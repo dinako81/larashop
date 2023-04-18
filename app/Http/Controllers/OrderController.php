@@ -10,23 +10,29 @@ class OrderController extends Controller
 {
    
     public function index()
+
     {
+        $clients = Client::all();
         $orders = Order::all();
         return view('orders.index', [
-            'orders' => $orders
+            'orders' => $orders,
+            'clients' => $clients
         ]);
     }
 
    
-    public function create()
-
+    public function create(Request $request)
     {
-
         $clients = Client::all();
+
+        $id = $request->id ?? 0;
+        
         return view('orders.create', [
-            'clients' => $clients
+            'clients' => $clients,
+            'id' => $id
         ]);
     }
+
 
    
     public function store(Request $request)

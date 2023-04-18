@@ -84,11 +84,9 @@
             <thead>
                 <tr>
                     <th scope="col"><b>ID</b></th>
-                    <th scope="col"><b>Name, Surname</b></th>
-
                     <th scope="col"><b>Title</b></th>
                     <th scope="col"><b>Price</b></th>
-
+                    <th scope="col"><b>Name, Surname</b></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -98,15 +96,19 @@
 
                 @forelse($orders as $order)
                 <tr>
-                    <td> </td>
-                    <td>
-                        <a class="client" href="{{route('clients-show', $order->orderClient)}}">
-                            {{$order->orderClient->name}} {{$order->orderClient->surname}}
-                        </a>
-                    </td>
+                    <div class="order-info">
+                        <div class="order-data">
+                            <td> ++ </td>
+                            <td> {{$order->title}} </td>
+                            <td> {{$order->price}}</td>
+                        </div>
 
-                    <td> {{$order->title}} </td>
-                    <td> {{$order->price}}</td>
+                        <td>
+                            <a class="client" href="{{route('clients-show', $order->orderClient)}}">
+                                {{$order->orderClient->name}} {{$order->orderClient->surname}}
+                            </a>
+                        </td>
+                    </div>
 
                     <td> <a href="{{route('orders-show', $order)}}" class="btn btn-info">Show</a></td>
                     <td> <a href="{{route('orders-edit', $order)}}" class="btn btn-success">Edit</a></td>
