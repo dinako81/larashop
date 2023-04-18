@@ -3,95 +3,105 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Town;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+// use Illuminate\Validation\Validator as V;
 
 class ClientController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware('auth');
     }
-
+    
     public function index(Request $request)
     {
-        $clients = Client::all()->sortByDesc('name');
-        $clients = Client::orderBy('name', 'desc')->get();
+        $clients = Client::where('id', '>', 0);
+        $sort = $request->sort ?? '';
+        $per = (int) ($request->per ?? 10);
+        $page = $request->page ?? 1;
 
-        
-        // $sort = $request->sort ?? '';
-        // $per = (int) ($request->per ?? 10);
-        // $page = $request->page ?? 1;
+       
 
-        // $clients = match($sort) {
-        //     'name_asc' => $clients->orderBy('name'),
-        //     'name_desc' => $clients->orderBy('name', 'desc'),
-        //     'surname_asc' => $clients->orderBy('surname'),
-        //     'surname_desc' => $clients->orderBy('surname', 'desc')
-        // };
+        $clients = match($sort) {
+            'clients' => $clients,
+            'name_asc' => $clients->orderBy('name'),
+            'name_desc' => $clients->orderBy('name', 'desc'),
+            'surname_asc' => $clients->orderBy('surname'),
+            'surname_desc' => $clients->orderBy('surname', 'desc'),
+            default => $clients
+        };
 
-        // $request->session()->put('last-client-view', [
-        //     'sort' => $sort,
-        //     'page' => $page,
-        //     'per' => $per
-        // ]);
+        $request->session()->put('last-client-view', [
+            'sort' => $sort,
+            'page' => $page,
+            'per' => $per
+        ]);
 
         // $clients = $clients->paginate($per)->withQueryString();
 
 
+        // $clients = Client::all()->sortByDesc('name');
+        $clients = $clients->get();
+
+
         return view('clients.index', [
-            'clients' => $clients
-            // 'sortSelect' => Client::SORT,
-            // 'sort' => $sort,
-            // 'perSelect' => Client::PER,
-            // 'per' => $per,
-            // 'page' => $page
+            'clients' => $clients,
+            'sortSelect' => Client::SORT,
+            'sort' => $sort,
+            'perSelect' => Client::PER,
+            'per' => $per,
+            'page' => $page
         ]);
 
     }
+
 
     public function create()
     {
-        $acc_number = 'LT' . rand(0, 9) . rand(0, 9) . ' ' . '0014' . ' ' . '7' . rand(0, 9) . rand(0, 9) . rand(0, 9) . ' ' . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9)  . ' ' . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
-        return view ('clients.create', [
-            'acc_number' => $acc_number
+        $towns = Town::all();
+        
+        return view('clients.create',[
+            'towns' => $towns
         ]);
     }
 
-    public function store(Request $request, Client $client)
-    {
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:3|alpha',
-            'surname' => 'required|min:3|alpha',
-            'personal_code' => 'required|min:11|numeric',
-        ]); 
+    public function store(Request $request)
+    {
         
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'surname' => 'required|min:3',
+        ],
+        [
+            'name.min' => 'Prailginti vardą iki 3 raidžių'
+        ]);
+
+        // $validator->after(function (V $validator) {
+        //     $validator->errors()->add('Fancy', 'Fancy is wrong!');
+        // });
+
         if ($validator->fails()) {
             $request->flash();
             return redirect()
-                        ->back()
-                        ->withErrors($validator);
-
-        } if ($client->personal_code = $request->personal_code) {
-            return redirect()
-            ->route('clients-index')
-            ->with('warn', 'The personal code exist!');
-    
+                ->back()
+                ->withErrors($validator);
         }
         
         $client = new Client;
         $client->name = $request->name;
         $client->surname = $request->surname;
-        $client->personal_code = $request->personal_code;
-        $client->acc_number = $request->acc_number;
-        $client->acc_balance = $request->acc_balance;
+        $client->town_id = $request->town_id;
         $client->save();
         return redirect()
         ->route('clients-index')
         ->with('ok', 'New client was created');
-        
+
     }
+
 
     public function show(Client $client)
     {
@@ -100,53 +110,60 @@ class ClientController extends Controller
         ]);
     }
 
-    public function edit(Client $client)
+
+    public function edit(Request $request, Client $client)
     {
+        $towns = Town::all();
+       
         return view('clients.edit', [
-            'client' => $client
+            'client' => $client,
+            'towns' => $towns
         ]);
     }
+
 
     public function update(Request $request, Client $client)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:3|alpha',
-            'surname' => 'required|min:3|alpha',
-            'personal_code' => 'required|min:11|numeric',
+            'name' => 'required|min:3',
+            'surname' => 'required|min:3',
         ]);
 
-        // p_c regex validation
- 
         if ($validator->fails()) {
             $request->flash();
             return redirect()
-                        ->back()
-                        ->withErrors($validator);
+                ->back()
+                ->withErrors($validator)
+                ->with('tt', $request->tt ?? 0);
         }
-
+        
         $client->name = $request->name;
         $client->surname = $request->surname;
-        $client->personal_code = $request->personal_code;
+        $client->tt = isset($request->tt) ? 1 : 0;
         $client->save();
         return redirect()
-        ->route('clients-index')
-        ->with('ok', 'This client was updated!');
+        ->route('clients-index', $request->session()->get('last-client-view', []))
+        ->with('ok', 'The client was updated')
+        ->with('light-up', $client->id);
     }
 
-    public function destroy(Client $client)
-    {
-        if ($client->acc_balance > 0) {
-            return redirect()
-            ->route('clients-index')
-            ->with('warn', 'The client has funds in the account!');
-    
-        } else {
 
+    public function destroy(Request $request, Client $client)
+    {
+        
+        if (!$request->confirm && $client->order->count()) {
+            return redirect()
+            ->back()
+            ->with('delete-modal', [
+                'This client has orders. Do you really want to delete?',
+                $client->id
+            ]);
+        }
+        
+        
         $client->delete();
         return redirect()
         ->route('clients-index')
-        ->with('info', 'Teh client was deleted!');
-        }
-
+        ->with('info', 'The client is dead');
     }
 }
