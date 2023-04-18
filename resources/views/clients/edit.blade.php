@@ -21,17 +21,13 @@
                             <div class="form-text">Please add client surname here</div>
                         </div>
 
-                        {{-- <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="tt" name="tt" {{  old('tt',  $client->tt ? 'checked' : '') }}>
-                        <label class="form-check-label" for="tt">Has TikTok account</label>
-                </div> --}}
-                <button type="submit" class="btn btn-primary">Submit</button>
-                @csrf
-                @method('put')
-                </form>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        @csrf
+                        @method('put')
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 @endsection

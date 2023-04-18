@@ -18,7 +18,7 @@ class ClientController extends Controller
     
     public function index(Request $request)
     {
-        $clients = Client::where('id', '>', 0);
+        $clients = Client::where('id', '!=', 0);
         $sort = $request->sort ?? '';
         $per = (int) ($request->per ?? 10);
         $page = $request->page ?? 1;
@@ -40,11 +40,13 @@ class ClientController extends Controller
             'per' => $per
         ]);
 
-        // $clients = $clients->paginate($per)->withQueryString();
+        $clients = $clients->paginate($per)->withQueryString();
 
+        // palieka paginatoriu su originaliais stringais- palieka psl su sortu pvz.
 
-        // $clients = Client::all()->sortByDesc('name');
-        $clients = $clients->get();
+        // $clients = Client::all()->sortByDesc('name'); //uklausiam ir gaunam is DB visus issortintus
+
+        // $clients = $clients->get();
 
 
         return view('clients.index', [
@@ -133,16 +135,17 @@ class ClientController extends Controller
             $request->flash();
             return redirect()
                 ->back()
-                ->withErrors($validator)
-                ->with('tt', $request->tt ?? 0);
+                ->withErrors($validator);
+               
         }
         
         $client->name = $request->name;
         $client->surname = $request->surname;
-        $client->tt = isset($request->tt) ? 1 : 0;
+       
         $client->save();
         return redirect()
-        ->route('clients-index', $request->session()->get('last-client-view', []))
+        ->route('clients-index', $request->session()->get('last-client-view', [])) 
+        // paima is sesijos kas buvo ikelta per edit ar index
         ->with('ok', 'The client was updated')
         ->with('light-up', $client->id);
     }

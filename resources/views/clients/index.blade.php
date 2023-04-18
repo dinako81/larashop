@@ -24,7 +24,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="col-2">
                                     <div class="mb-3">
                                         <label class="form-label">Results per page</label>
@@ -80,10 +79,10 @@
                     </ul>
                 </div>
             </div>
-            {{-- <div class="m-2">
+            <div class="m-2">
                 {{ $clients->links() }}
-        </div> --}}
+            </div>
+        </div>
     </div>
-</div>
 </div>
 @endsection
