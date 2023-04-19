@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title', 100);
             $table->decimal('price', 8, 2);
             $table->unsignedBigInteger('client_id'); //rysys su kita lentele
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade'); //jeigu delete tevas, pirmiausiai isdelitinam jo vaikus
 
 
         });

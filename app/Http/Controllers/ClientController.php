@@ -33,6 +33,7 @@ class ClientController extends Controller
             'surname_desc' => $clients->orderBy('surname', 'desc'),
             default => $clients
         };
+// iputnam i sesija paskutini sorta ir t.t., toliau einam i edit ir pasiemam is sesijos
 
         $request->session()->put('last-client-view', [
             'sort' => $sort,
@@ -146,6 +147,7 @@ class ClientController extends Controller
         return redirect()
         ->route('clients-index', $request->session()->get('last-client-view', [])) 
         // paima is sesijos kas buvo ikelta per edit ar index
+        
         ->with('ok', 'The client was updated')
         ->with('light-up', $client->id);
     }
@@ -153,7 +155,7 @@ class ClientController extends Controller
 
     public function destroy(Request $request, Client $client)
     {
-        
+        // kai buna countas-turi kazka (uzsakyma) ir requeste nera confirm (modal-yes)
         if (!$request->confirm && $client->order->count()) {
             return redirect()
             ->back()
@@ -161,6 +163,7 @@ class ClientController extends Controller
                 'This client has orders. Do you really want to delete?',
                 $client->id
             ]);
+            // perduodam teksta ir cliento ID kuri reikia istrinti
         }
         
         

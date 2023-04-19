@@ -69,8 +69,7 @@ class OrderController extends Controller
 
         return redirect()
         ->route('orders-index')
-        ->with('light-up', $order->id)
-        ;
+        ->with('light-up', $order->id);
     }
 
 
